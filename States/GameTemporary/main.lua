@@ -4,13 +4,15 @@ local Game = {}
 
 function Game:load()
 	p = 4
-    love.update = self.update
+  love.update = self.update
 	love.draw = self.draw
 	love.keypressed = self.keypressed
 
 	--Setting up the world physics
 	love.physics.setMeter(64)
 	self.world = love.physics.newWorld(0,9.81*64, true)
+
+	print(self.world)
 
 	--Setting up tables
 	self.objects = {}
@@ -42,20 +44,12 @@ function Game:dtUpdate(dt)
 
 end
 
-function Game:update()
+function Game:update(dt)
 
 	test = {}
-	for i,v in pairs(self) do
-	for t,k in pairs(self) do
-	for j,x in pairs(self) do
-		table.insert(test,{j=j,x=x})
-	end
-	end
 
-	for i,v in pairs(test) do
 
-end
-	self.world:update()
+	self.world:update(dt)
 
 	if(love.keyboard.isDown("right")) then
 		self.objects.players[1]['body']:applyForce(400,0)
@@ -65,8 +59,8 @@ end
 		self.objects.players[1]['body']:applyForce(0,400)
 	elseif(love.keyboard.isDown('left')) then
 		self.objects.players[1]['body']:applyForce(0,-400)
-	en
-dend
+	end
+end
 
 function Game:draw()
 	love.graphics.print(p, 5, 5)
@@ -86,7 +80,7 @@ function Game:keypressed(key)
 	if(key == 'a') then
 		LoadState("Battle")
 	elseif(key == 'b') then
-		LoadState("GameTemporary") 
+		LoadState("GameTemporary")
 	end
 end
 
