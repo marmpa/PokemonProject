@@ -20,6 +20,8 @@ function Battle:load()
  	local dg = string.format("%s %s %d %d", entity, 'at', 320, 240)
  	udp:send(dg)
 
+	print(udp,dg)
+
  	t=0
 
 	p = 5
@@ -44,14 +46,14 @@ function Battle:load()
 
 	currentWidth = love.graphics.getWidth()
 	currentHeight = love.graphics.getHeight()
-	
+
 	movementSpeed = 5
 
 
 	time = 0;
 end
 
-function Battle.update(dt)
+function Battle:update(dt)
 	time=dt
 	t=t+dt
 	if(t>5) then
@@ -66,16 +68,16 @@ function Battle.update(dt)
 		elseif(love.keyboard.isDown("down")) then
 			img1Y = img1Y + movementSpeed
 		end
-	
+
 		local dg = string.format("%s %s %f %f", entity, 'moveC', img1X, img1Y)
 		--udp:send(dg)
-		
+
 
 		local dg = string.format("%s %s $", entity, 'update')
 		udp:send(dg)
- 
+
 		t=0 -- set t for the next round
-	
+
 	end
 
 
@@ -83,14 +85,14 @@ function Battle.update(dt)
 		-- and here is something new, the much anticipated other end of udp:send!
 		-- receive return a waiting packet (or nil, and an error message).
 		-- data is a string, the payload of the far-end's send. we can deal with it
-		-- the same ways we could deal with any other string in lua (needless to 
+		-- the same ways we could deal with any other string in lua (needless to
 		-- say, getting familiar with lua's string handling functions is a must.
 		data, msg = udp:receive()
- 
+
 		if data then -- you remember, right? that all values in lua evaluate as true, save nil and false?
- 
+
 			-- match is our freind here, its part of string.*, and data is
-			-- (or should be!) a string. that funky set of characters bares some 
+			-- (or should be!) a string. that funky set of characters bares some
 			-- explanation, though.
 			-- (need summary of patterns, and link to section 5.4.1)
 			ent, cmd, parms = data:match("^(%S*) (%S*) (.*)")
@@ -98,7 +100,7 @@ function Battle.update(dt)
 				-- more patterns, this time with sets, and more length selectors!
 				local x, y = parms:match("^(%-?[%d.e]*) (%-?[%d.e]*)$")
 				assert(x and y) -- validation is better, but asserts will serve.
- 
+
 				-- don't forget, even if you matched a "number", the result is still a string!
 				-- thankfully conversion is easy in lua.
 				x, y = tonumber(x), tonumber(y)
@@ -115,7 +117,7 @@ function Battle.update(dt)
 				-- never forget, you can not trust the client!
 				print("unrecognised command:", cmd)
 			end
- 
+
 		-- if data was nil, then msg will contain a short description of the
 		-- problem (which are also error id...).
 		-- the most common will be 'timeout', since we settimeout() to zero,
@@ -123,10 +125,10 @@ function Battle.update(dt)
 		--
 		-- but we should check to see if its a *different* error, and act accordingly.
 		-- in this case we don't even try to save ourselves, we just error out.
-		elseif msg ~= 'timeout' then 
+		elseif msg ~= 'timeout' then
 			error("Network error: "..tostring(msg))
 		end
-	until not data 
+	until not data
 
 end
 
@@ -147,7 +149,7 @@ function Battle:keypressed(key)
 	if(key == 'a') then
 		LoadState("Battle")
 	elseif(key == 'b') then
-		LoadState("GameTemporary") 
+		LoadState("GameTemporary")
 	end
 
 	if(key=="4") then
