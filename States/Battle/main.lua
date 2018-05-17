@@ -46,12 +46,15 @@ function Battle:load()
 	currentHeight = love.graphics.getHeight()
 	
 	movementSpeed = 5
-	
+
+
+	time = 0;
 end
 
-function Battle:update(dt)
-	t=t+1
-	if(t>10) then
+function Battle.update(dt)
+	time=dt
+	t=t+dt
+	if(t>5) then
 		if(love.keyboard.isDown("left")) then
 			img1X = img1X - movementSpeed
 		elseif(love.keyboard.isDown("right")) then
@@ -63,6 +66,7 @@ function Battle:update(dt)
 		elseif(love.keyboard.isDown("down")) then
 			img1Y = img1Y + movementSpeed
 		end
+	
 		local dg = string.format("%s %s %f %f", entity, 'moveC', img1X, img1Y)
 		--udp:send(dg)
 		
@@ -70,9 +74,9 @@ function Battle:update(dt)
 		local dg = string.format("%s %s $", entity, 'update')
 		udp:send(dg)
  
-		t=t-10 -- set t for the next round
+		t=0 -- set t for the next round
+	
 	end
-
 
 
 	repeat
@@ -133,7 +137,7 @@ function Battle:draw()
 
 	love.graphics.print(love.graphics.getWidth().." "..love.graphics.getHeight().." yes",300)
 
-	love.graphics.print(testImg:getWidth()*imgScaleX.." "..testImg:getHeight()*imgScaleY.." and the second object "..testImg1:getWidth()*imgScaleX.." "..testImg1:getHeight()*imgScaleY,0,200)
+	love.graphics.print(testImg:getWidth()*imgScaleX.." "..testImg:getHeight()*imgScaleY.." and the second object "..testImg1:getWidth()*imgScaleX.." "..testImg1:getHeight()*imgScaleY.." and dt"..time,0,200)
 
 	love.graphics.draw(text,love.graphics.getWidth()-text:getWidth(),love.graphics.getHeight()-text:getHeight())
 
