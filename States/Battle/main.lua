@@ -1,14 +1,16 @@
+local socket = require "socket"
 local Battle = {}
 
 function Battle:load()
-	t = 0
-	socket = require "socket.core"
 
- 	address,port = "localhost",12345
+
+	t = 0
+ 	address,port = "192.168.1.5",12341
 
  	updateRate = 0.1
 
  	udp = socket.udp()
+
 
  	udp:settimeout(0)
  	udp:setpeername(address,port)
@@ -20,8 +22,9 @@ function Battle:load()
  	local dg = string.format("%s %s %d %d", entity, 'at', 320, 240)
  	udp:send(dg)
 
-	print(udp,dg)
 
+	print(udp,dg,entity)
+	udp:send(dg)
  	t=0
 
 	p = 5
